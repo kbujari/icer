@@ -1,0 +1,16 @@
+[workspace]
+members = ["libicer", "icer"]
+
+[workspace.package]
+version = "0.1.0"
+authors = [ "Kleidi Bujari <dev@kleidi.ca>" ]
+edition = "2021"
+repository = "https://github.com/kbzt/icer"
+license = "MIT"
+
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.release]
+lto = true
+codegen-units = 1
