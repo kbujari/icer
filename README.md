@@ -21,7 +21,7 @@ This repository is split into two projects:
 ### Implementation
 - Uses the `image` Rust crate to support [various image types](https://github.com/image-rs/image/blob/master/README.md#supported-image-formats)
 - Currently works with grayscale images, RGB support planned for the future
-- Only stable and `safe` Rust, with complete error handling
+- 100% safe Rust, with complete error handling
 
 ## Disclaimer
 
