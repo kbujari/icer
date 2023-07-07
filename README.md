@@ -2,7 +2,7 @@
 
 # The ICER Image Compressor
 
-**(WIP)** Implementation of the ICER Progressive Wavelet Image Compressor [published by NASA](https://ipnpr.jpl.nasa.gov/progress_report/42-155/155J.pdf) used for the Mars Exploration Rover.
+**(WIP)** Implementation of the ICER Progressive Wavelet Image Compressor [published by NASA](https://ipnpr.jpl.nasa.gov/progress_report/42-155/155J.pdf), and used for the Mars Exploration Rover.
 
 This repository is split into two projects:
 
