@@ -3,7 +3,7 @@ members = ["libicer", "icer"]
 
 [workspace.package]
 version = "0.1.0"
-authors = [ "Kleidi Bujari <dev@kleidi.ca>" ]
+authors = ["Kleidi Bujari"]
 edition = "2021"
 repository = "https://github.com/kbzt/icer"
 license = "MIT"

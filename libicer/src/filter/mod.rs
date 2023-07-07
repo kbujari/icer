@@ -1,4 +1,4 @@
-use std::str::FromStr;
+pub(crate) mod transform;
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 #[rustfmt::skip]
@@ -21,7 +21,7 @@ impl FilterParams {
     }
 }
 
-impl FromStr for FilterParams {
+impl std::str::FromStr for FilterParams {
     type Err = &'static str;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -33,7 +33,7 @@ impl FromStr for FilterParams {
             "e" => Ok(FilterParams::E),
             "f" => Ok(FilterParams::F),
             "q" => Ok(FilterParams::Q),
-            _ => Ok(FilterParams::Q),
+            _ => Err("Possible filters: [A, B, C, D, E, F, Q]"),
         }
     }
 }

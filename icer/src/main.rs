@@ -1,36 +1,33 @@
-use clap::{ArgAction::*, Parser};
 use anyhow::Result;
+use clap::{ArgAction::*, Parser};
 use std::path;
 
-use libicer;
+use libicer::Icer;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
-
-    #[arg(value_parser = clap::value_parser!(path::PathBuf))]
     /// Image to compress
+    #[arg(value_parser = clap::value_parser!(path::PathBuf))]
     image_path: path::PathBuf,
 
-    #[arg(short, long, default_value_t = String::from("q"))]
     /// Specify wavelet transform to be used
-    transform: String,
+    #[arg(short, long)]
+    transform: libicer::FilterParams,
 
-    #[arg(short, long, action = SetTrue)]
     /// Enable verbose logging
+    #[arg(short, long, action = SetTrue)]
     debug: bool,
 }
 
 fn main() -> Result<()> {
     let cli = Args::parse();
-    libicer::def_img(&cli.image_path);
 
-    let param = &cli.transform
-        .parse::<libicer::params::FilterParams>()
-        .expect("invalid filter")
-        .to_params();
+    let icer = Icer {
+        filter_param: cli.transform,
+    };
 
-    println!("{:?}", param);
+    println!("{:?}", icer.compress(&cli.image_path));
 
     Ok(())
 }
