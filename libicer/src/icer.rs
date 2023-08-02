@@ -14,11 +14,9 @@ impl Icer {
         }
     }
 
-    pub fn compress(&self, path: &path::PathBuf) {
-        println!("{:?}", path);
+    pub fn compress(&self, img_path: &path::PathBuf) {
+        let img = image::open(&img_path).unwrap().into_luma8();
+        println!("{:#?}", img);
+        img.save("out.jpg").unwrap();
     }
-}
-
-impl Default for Icer {
-    fn default() -> Self { Self::new() }
 }
