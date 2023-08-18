@@ -1,5 +1,3 @@
-pub(crate) mod transform;
-
 #[derive(Debug, Copy, Clone, PartialEq)]
 #[rustfmt::skip]
 pub enum FilterParams {
@@ -35,5 +33,11 @@ impl std::str::FromStr for FilterParams {
             "q" => Ok(FilterParams::Q),
             _ => Err("Possible filters: [A, B, C, D, E, F, Q]"),
         }
+    }
+}
+
+impl Default for FilterParams {
+    fn default() -> Self {
+        Self::Q
     }
 }

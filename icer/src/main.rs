@@ -24,7 +24,7 @@ fn main() -> Result<()> {
     let cli = Args::parse();
 
     let icer = Icer {
-        filter_param: cli.transform,
+        filter_params: cli.transform,
     };
 
     println!("{:?}", icer.compress(&cli.image_path));
