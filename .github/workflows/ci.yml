@@ -2,10 +2,8 @@ name: CI
 
 on:
   pull_request:
+    branches: ["main"]
   push:
-    paths:
-      - 'src/**/*.rs'
-      - 'Cargo.*'
     branches: ["main"]
 
 concurrency:
