@@ -3,46 +3,51 @@
 //  - use actual sizes instead of only u32
 //
 
-use create::FilterParams;
+use crate::FilterParams;
 
-fn low_pass_filter(data: &mut Vec<u16>, input: &[u8], odd: bool) {
-    // helper for filter computation
-    let compute = |n1: u8, n2: u8| -> u16 { (n1 as u16 + n2 as u16) / 2 };
+fn low_pass_filter(data: &mut [u32], input: &[u32]) {
+    // helpers for filter computation
+    let compute = |n1: u32, n2: u32| -> u32 { (n1 + n2) / 2 };
+    let odd = input.len() & 1 == 1;
+
+    let (last, elements) = data.split_last_mut().unwrap();
 
     // use helper on all but last element
-    input
-        .into_iter()
-        .enumerate()
-        .map(|(idx, _)| (*input.get(idx).unwrap(), *input.get(idx + 1).unwrap_or(&0)))
-        .map(|(n1, n2)| compute(n1, n2))
-        .for_each(|val| data.push(val));
+    for (idx, el) in elements.into_iter().enumerate() {
+        let n1 = input[2 * idx];
+        let n2 = input[(2 * idx) + 1];
+
+        *el = compute(n1, n2);
+    }
 
     // determine last element based on odd or even input length
-    let last = if !odd {
-        compute(input[input.len() - 2], input[input.len() - 1])
+    *last = if odd {
+        *input.last().unwrap()
     } else {
-        *input.last().unwrap() as u16
-    };
+        let n1 = input[input.len() - 2];
+        let n2 = input[input.len() - 1];
 
-    // overwrite last element
-    *data.get_mut(input.len() - 1).unwrap() = last;
+        compute(n1, n2)
+    };
 }
 
-fn high_pass_filter(data: &mut Vec<u16>, input: &[u8], odd: bool, filter: &FilterParams) {
-    let compute = |n1: u8, n2: u8| -> u16 { (n1 as u16 - n2 as u16) / 2 };
+fn high_pass_filter(data: &mut [u32], input: &[u32], filter: &FilterParams) {
+    let compute = |n1: u32, n2: u32| -> u32 { (n1 - n2) / 2 };
+    let odd = input.len() & 1 == 1;
+    let (a_neg, a0, a1, b) = filter.to_params();
 
     // use helper on all but last element
-    for idx in 0..(input.len() - 1) {
-        data.push(compute(input[idx], input[idx + 1]));
-    }
+    // for idx in 0..(input.len() - 1) {
+    // data.push(compute(input[idx], input[idx + 1]));
+    // }
 }
 
-pub fn transform_1d(input: &[u8], filter: &FilterParams, is_odd: bool) -> Vec<u16> {
-    let mut output = Vec::with_capacity(input.len() * 2);
+pub fn transform_1d(input: &[u32], filter: &FilterParams) -> Vec<u32> {
+    let mut output = input.to_vec();
+    let (low, high) = output.split_at_mut(input.len() / 2);
 
-    low_pass_filter(&mut output, input, is_odd);
-    assert_eq!(output.len(), input.len());
-    // high_pass_filter(&mut output, input.as_slice(), is_odd, filter);
+    low_pass_filter(low, input);
+    high_pass_filter(high, input, filter);
 
     output
 }
