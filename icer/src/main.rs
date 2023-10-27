@@ -27,7 +27,7 @@ fn main() -> Result<()> {
         filter_params: cli.transform,
     };
 
-    println!("{:?}", icer.compress(&cli.image_path));
+    icer.compress(&cli.image_path);
 
     Ok(())
 }
