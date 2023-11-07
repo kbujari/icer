@@ -1,6 +1,7 @@
 mod filters;
 mod wavelet;
 
+use crate::wavelet::wavelet_transform;
 use std::path::PathBuf;
 
 pub use crate::filters::FilterParams;
@@ -19,7 +20,7 @@ impl Icer {
 
     pub fn compress(&self, path: &PathBuf) {
         let img = image::open(path).unwrap().into_luma8();
-        wavelet::wavelet_transform(&self, &img);
+        wavelet_transform(self, &img);
     }
 }
 
