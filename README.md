@@ -4,13 +4,6 @@
 
 **(WIP)** Implementation of the ICER Progressive Wavelet Image Compressor [published by NASA](https://ipnpr.jpl.nasa.gov/progress_report/42-155/155J.pdf), used for the Mars Exploration Rover.
 
-This repository is split into two projects:
-
-| Crate       | Description                                                                    |
-|-------------|--------------------------------------------------------------------------------|
-| **libicer** | Library for using this ICER implentation with your own Rust application.       |
-| **icer**    | CLI-based reference application using the libicer crate.                       |
-
 ## Features
 
 ### Algorithm
@@ -19,10 +12,7 @@ This repository is split into two projects:
 - Designed to only use integer arithmetic
 
 ### Implementation
-- Uses the `image` Rust crate to support [various image types](https://github.com/image-rs/image/blob/master/README.md#supported-image-formats)
-- Currently works with grayscale images, RGB support planned for the future
-- 100% safe Rust, with complete error handling
-
-## Disclaimer
-
-This is a WIP implementation and thus will have breaking changes until the `v1.0.0` release.
+- Uses the [`image`](https://github.com/image-rs/image) crate for converting between image formats
+- Currently works with grayscale images, maybe RGB later
+- Minimal allocations
+- 100% safe Rust
