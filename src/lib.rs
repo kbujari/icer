@@ -2,11 +2,11 @@ mod filters;
 mod wavelet;
 
 use crate::wavelet::wavelet_transform;
-use std::path::PathBuf;
+use std::path::Path;
 
 pub use crate::filters::FilterParams;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Default, Clone, Copy)]
 pub struct Icer {
     pub filter_params: FilterParams,
 }
@@ -18,14 +18,8 @@ impl Icer {
         }
     }
 
-    pub fn compress(&self, path: &PathBuf) {
-        let img = image::open(path).unwrap().into_luma8();
+    pub fn compress(&self, path: impl AsRef<Path>) {
+        let img = image::open(&path).unwrap().into_luma8();
         wavelet_transform(self, &img);
-    }
-}
-
-impl Default for Icer {
-    fn default() -> Self {
-        Self::new()
     }
 }

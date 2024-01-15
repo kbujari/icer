@@ -1,7 +1,13 @@
-#[derive(Debug, Copy, Clone, PartialEq)]
-#[rustfmt::skip]
+#[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub enum FilterParams {
-    A, B, C, D, E, F, Q,
+    #[default]
+    A,
+    B,
+    C,
+    D,
+    E,
+    F,
+    Q,
 }
 
 impl FilterParams {
@@ -33,11 +39,5 @@ impl std::str::FromStr for FilterParams {
             "q" => Ok(FilterParams::Q),
             _ => Err("Possible filters: [A, B, C, D, E, F, Q]"),
         }
-    }
-}
-
-impl Default for FilterParams {
-    fn default() -> Self {
-        Self::Q
     }
 }
