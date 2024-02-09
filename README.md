@@ -1,4 +1,4 @@
-[![ci](https://github.com/kbujari/icer/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/kbujari/icer/actions/workflows/ci.yml) [![license](https://img.shields.io/github/license/kbujari/icer)](https://opensource.org/licenses/MIT)
+[![CI](https://github.com/kbujari/icer/actions/workflows/ci.yml/badge.svg)](https://github.com/kbujari/icer/actions/workflows/ci.yml) [![license](https://img.shields.io/github/license/kbujari/icer)](https://opensource.org/licenses/MIT)
 
 # The ICER Image Compressor
 
