@@ -10,5 +10,6 @@ license = "MIT"
 image = { version = "0.24.6", optional = true }
 
 [features]
-render = ["dep:image"]
-default = ["render"]
+default = ["alloc"]
+
+alloc = ["dep:image"]

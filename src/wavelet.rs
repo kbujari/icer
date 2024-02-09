@@ -1,13 +1,21 @@
 use crate::FilterParams;
 
-pub fn transform_1d(input: &[u16], filter: &FilterParams) -> Vec<u16> {
-    let mut output = vec![0u16; input.len()];
-    let (low, high) = output.split_at_mut(input.len() / 2);
+#[inline]
+const fn is_odd(len: usize) -> bool {
+    len & 1 == 1
+}
+
+pub fn wavelet_transform(buf: &mut [u16], input: &[u16], width: usize, filter: FilterParams) {
+    buf.chunks_exact_mut(width)
+        .for_each(|row| transform_1d(row, input, filter));
+}
+
+fn transform_1d(data: &mut [u16], input: &[u16], filter: FilterParams) {
+    let half = data.len() / 2;
+    let (low, high) = data.split_at_mut(half);
 
     lowpass(low, input);
     highpass(high, low, input, filter);
-
-    output
 }
 
 fn lowpass(data: &mut [u16], input: &[u16]) {
@@ -19,14 +27,14 @@ fn lowpass(data: &mut [u16], input: &[u16]) {
         .enumerate()
         .for_each(|(idx, el)| *el = compute(idx));
 
-    *last = match input.len() & 1 == 1 {
+    *last = match is_odd(input.len()) {
         true => *input.last().unwrap(),
         false => compute((input.len() - 1) / 2),
     };
 }
 
-fn highpass(data: &mut [u16], low: &[u16], input: &[u16], filter: &FilterParams) {
-    let _ = {
+fn highpass(data: &mut [u16], low: &[u16], input: &[u16], filter: FilterParams) {
+    {
         let compute = |n: usize| input[2 * n].saturating_sub(input[(2 * n) + 1]);
         let (last, elements) = data.split_last_mut().unwrap();
 
@@ -35,11 +43,11 @@ fn highpass(data: &mut [u16], low: &[u16], input: &[u16], filter: &FilterParams)
             .enumerate()
             .for_each(|(idx, el)| *el = compute(idx));
 
-        *last = match input.len() & 1 == 1 {
+        *last = match is_odd(input.len()) {
             true => *input.last().unwrap(),
             false => compute((input.len() - 1) / 2),
         };
-    };
+    }; // drop references
 
     let r = |n: usize| (low[n - 1].saturating_sub(low[n])) as f32;
     let (alpha_neg, alpha_zero, alpha_one, beta) = filter.to_params();
@@ -64,7 +72,7 @@ fn highpass(data: &mut [u16], low: &[u16], input: &[u16], filter: &FilterParams)
             let n3 = data[2] as f32 / 4.0;
             (n1 + n2 - n3 + 0.5) as u16
         }
-        _ => compute(1, data[2]),
+        _ => compute(2, data[2]),
     });
 
     for idx in 2..(data.len() - 1) {
@@ -72,7 +80,7 @@ fn highpass(data: &mut [u16], low: &[u16], input: &[u16], filter: &FilterParams)
     }
 
     let last_idx = (input.len() / 2) - 1;
-    *data.last_mut().unwrap() = match input.len() & 1 == 1 {
+    *data.last_mut().unwrap() = match is_odd(input.len()) {
         true => compute(last_idx, data[last_idx + 1]),
         false => r(last_idx) as u16 / 4,
     };

@@ -1,25 +1,23 @@
 mod filters;
 mod wavelet;
 
-use crate::wavelet::wavelet_transform;
-use std::path::Path;
+pub use filters::FilterParams;
 
-pub use crate::filters::FilterParams;
-
-#[derive(Debug, Default, Clone, Copy)]
-pub struct Icer {
-    pub filter_params: FilterParams,
+pub fn compress(buffer: &mut [u16], input: &[u16], width: usize, filter: FilterParams) {
+    wavelet::wavelet_transform(buffer, input, width, filter);
 }
 
-impl Icer {
-    pub fn new() -> Self {
-        Icer {
-            filter_params: FilterParams::A,
-        }
-    }
+#[cfg(feature = "alloc")]
+pub fn compress_file(path: impl AsRef<std::path::Path>, filter: FilterParams) -> Vec<u16> {
+    let input = image::open(&path)
+        .expect("provide existing image file")
+        .into_luma16();
 
-    pub fn compress(&self, path: impl AsRef<Path>) {
-        let img = image::open(&path).unwrap().into_luma8();
-        wavelet_transform(self, &img);
-    }
+    let width = input.dimensions().0 as usize;
+
+    let mut buf = vec![0u16; input.len()];
+
+    self::compress(&mut buf, &input, width, filter);
+
+    buf
 }

@@ -1,4 +1,4 @@
-#[derive(Debug, Default, Copy, Clone, PartialEq)]
+#[derive(Default, Copy, Clone, PartialEq)]
 pub enum FilterParams {
     #[default]
     A,
