@@ -19,10 +19,9 @@ pub fn compress_file(path: impl AsRef<std::path::Path>, filter: FilterParams) ->
         .into_luma16();
 
     let width = input.dimensions().0 as usize;
-
     let mut buf = vec![0u16; input.len()];
 
-    self::compress(&mut buf, &input.as_raw(), width, filter);
+    self::compress(&mut buf, input.as_raw(), width, filter);
 
     buf
 }
