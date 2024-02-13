@@ -3,8 +3,13 @@ mod wavelet;
 
 pub use filters::FilterParams;
 
-pub fn compress(buffer: &mut [u16], input: &[u16], width: usize, filter: FilterParams) {
-    wavelet::wavelet_transform(buffer, input, width, filter);
+pub fn compress(
+    mut buffer: impl AsMut<[u16]>,
+    input: impl AsRef<[u16]>,
+    width: usize,
+    filter: FilterParams,
+) {
+    wavelet::wavelet_transform(buffer.as_mut(), input.as_ref(), width, filter);
 }
 
 #[cfg(feature = "alloc")]
@@ -17,7 +22,7 @@ pub fn compress_file(path: impl AsRef<std::path::Path>, filter: FilterParams) ->
 
     let mut buf = vec![0u16; input.len()];
 
-    self::compress(&mut buf, &input, width, filter);
+    self::compress(&mut buf, &input.as_raw(), width, filter);
 
     buf
 }
